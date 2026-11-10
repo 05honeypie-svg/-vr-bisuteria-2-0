@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>V.R Bisutería | Pequeños detalles, grandes historias</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+      const CONFIG = {
+        catalogUrl: "https://canva.link/tlqd16e246yz88k",
+        whatsappUrl: "https://wa.me/573133313811",
+        whatsappMessage: "Hola, me interesa conocer más sobre el catálogo de V.R Bisutería"
+      };
+      CONFIG.whatsappLink = `${CONFIG.whatsappUrl}?text=${encodeURIComponent(CONFIG.whatsappMessage)}`;
+    </script>
+
+    <style>
+        body { font-family: 'Montserrat', sans-serif; background-color: #FAF8F5; color: #4A4238; }
+        .font-serif-title { font-family: 'Cormorant Garamond', serif; }
+        .glass-card { background: rgba(255,255,255,.88); backdrop-filter: blur(12px); border: 1px solid rgba(212,163,115,.25); }
+        .hero-bg { background-image: linear-gradient(to right, rgba(250,248,245,.95), rgba(250,248,245,.7)), url('https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=1600&auto=format&fit=crop'); background-size: cover; background-position: center; }
+        .survey-option input:checked + label { background-color: #d97706; color: #fff; border-color: #d97706; box-shadow: 0 4px 12px rgba(217,119,6,.25); }
+    </style>
+</head>
+<body class="relative min-h-screen flex flex-col justify-between">
+
+    <!-- Notificación -->
+    <div id="toast" role="status" aria-live="polite" class="fixed bottom-5 right-5 z-[60] transform transition-all duration-300 ease-in-out bg-stone-900 text-white px-5 py-3.5 rounded-xl shadow-2xl flex items-center gap-3 pointer-events-none translate-y-20 opacity-0">
+        <i id="toast-icon" class="fa-solid fa-circle-check text-amber-500 text-xl"></i>
+        <span id="toast-message" class="text-xs font-medium">Notificación</span>
+    </div>
+
+    <!-- Registro voluntario: la navegación no depende de entregar datos -->
+    <div id="welcome-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/70 backdrop-blur-md">
+      <div class="bg-white rounded-3xl max-w-md w-full p-7 relative shadow-2xl border border-amber-200/60">
+        <button type="button" id="close-welcome" class="absolute right-4 top-4 text-stone-500" aria-label="Cerrar">✕</button>
+        <div class="text-center mb-5"><div class="w-14 h-14 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center mx-auto text-2xl">✧</div>
+          <p class="text-[10px] uppercase tracking-[.25em] text-amber-700 mt-3">V.R. Bisutería</p><h3 class="font-serif-title text-3xl font-bold text-stone-800">Registro voluntario</h3>
+          <p class="text-xs text-stone-600 mt-2">Puedes explorar la página sin registrarte. Si deseas dejar tus datos, completa este formulario y autoriza expresamente su tratamiento.</p></div>
+        <form id="gate-form" class="space-y-3">
+          <label class="block text-xs font-semibold">Nombre (opcional)<input id="user-fullname" autocomplete="name" class="mt-1 w-full px-4 py-3 rounded-xl border border-stone-300 text-sm" maxlength="100" placeholder="Tu nombre"></label>
+          <label class="block text-xs font-semibold">Correo electrónico (opcional)<input id="user-email" type="email" autocomplete="email" class="mt-1 w-full px-4 py-3 rounded-xl border border-stone-300 text-sm" maxlength="254" placeholder="correo@ejemplo.com"></label>
+          <label class="flex items-start gap-2 text-[11px] leading-relaxed text-stone-600"><input id="data-consent" type="checkbox" required class="mt-1 accent-amber-600"><span>Autorizo de manera previa, expresa e informada a Camilo Forero, responsable de V.R. Bisutería, a tratar los datos que voluntariamente suministre para gestionar registros, analizar la experiencia de visitantes y mejorar el emprendimiento. Podré solicitar su eliminación cuando corresponda. <a href="#privacidad" class="underline text-amber-700">Consultar aviso de privacidad</a>.</span></label>
+          <button type="submit" class="w-full py-3 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs uppercase tracking-widest">Enviar registro voluntario</button>
+        </form><p class="text-[10px] text-stone-400 mt-3">No necesitas registrarte para continuar navegando. No ingreses datos sensibles.</p>
+      </div>
+    </div>
+
+    <!-- Acceso administrativo protegido por autenticación -->
+    <button type="button" onclick="toggleDevPanel()" class="fixed bottom-5 left-5 z-40 bg-stone-800 text-amber-400 p-3 rounded-full shadow-2xl border border-amber-500/40" aria-label="Administración"><i class="fa-solid fa-lock"></i><span class="text-xs font-semibold uppercase tracking-wider text-white ml-2">Administración</span></button>
+
+    <main>
+        <!-- Portada -->
+        <section id="inicio" class="hero-bg min-h-[85vh] flex items-center relative overflow-hidden py-16 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto w-full grid md:grid-cols-2 gap-12 items-center">
+                <div class="space-y-6 text-center md:text-left z-10">
+                    <div class="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/90 border border-amber-300 text-xs font-bold text-amber-800 tracking-wider uppercase shadow-md">
+                        <span class="relative flex h-2.5 w-2.5"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span></span>
+                        <span>Personas registradas: <strong id="hero-counter" class="text-sm font-extrabold text-amber-600">0</strong></span>
+                    </div>
+                    <h1 class="font-serif-title text-5xl sm:text-6xl lg:text-7xl font-bold text-stone-800 leading-tight">Diseños que te hacen <span class="italic font-normal text-amber-600">brillar</span></h1>
+                    <p class="text-xl text-stone-700 max-w-lg font-serif-title italic">"Pequeños detalles, grandes historias"</p>
+                    <p class="text-sm text-stone-600 leading-relaxed max-w-md">Descubre piezas exclusivas de bisutería fina pensadas para resaltar tu esencia única en cada momento especial.</p>
+                    <div class="pt-4 flex flex-col sm:flex-row flex-wrap gap-4 justify-center md:justify-start">
+                        <a data-catalog href="#" target="_blank" rel="noopener noreferrer" class="px-8 py-4 rounded-full bg-amber-600 hover:bg-amber-700 text-white font-semibold text-xs tracking-widest uppercase shadow-lg shadow-amber-600/20 transition-all transform hover:-translate-y-0.5 text-center flex items-center justify-center gap-2"><span>Ver catálogo en Canva</span><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                        <a href="#encuesta" class="px-8 py-4 rounded-full bg-white/90 hover:bg-white text-stone-800 border border-stone-300 font-semibold text-xs tracking-widest uppercase transition-all text-center hover:shadow-md">Responder encuesta</a>
+                        <a data-whatsapp href="#" target="_blank" rel="noopener noreferrer" class="px-8 py-4 rounded-full bg-green-600 hover:bg-green-700 text-white font-semibold text-xs tracking-widest uppercase shadow-lg transition-all transform hover:-translate-y-0.5 text-center flex items-center justify-center gap-2"><i class="fa-brands fa-whatsapp text-lg"></i><span>Contáctanos</span></a>
+                    </div>
+                </div>
+                <div class="relative flex justify-center">
+                    <div class="relative w-72 sm:w-80 md:w-96 aspect-[4/5] rounded-t-full rounded-b-2xl overflow-hidden shadow-2xl border-4 border-white">
+                        <img src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=800&auto=format&fit=crop" alt="Colección de bisutería V.R" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
+                        <div class="absolute bottom-6 left-6 right-6 text-white text-center"><span class="font-serif-title text-2xl italic block">Nueva Colección</span><span class="text-[10px] tracking-widest uppercase text-amber-200">Colección V.R Bisutería</span></div>
+                    </div>
+                    <div class="absolute -bottom-4 -right-2 glass-card p-4 rounded-2xl shadow-xl flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-600"><i class="fa-solid fa-sparkles text-lg"></i></div>
+                        <div><p class="text-xs font-bold text-stone-800">Calidad artesanal</p><p class="text-[10px] text-stone-600">Diseños únicos e irrepetibles</p></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Proyecto formativo -->
+        <section id="proyecto" class="py-20 bg-stone-100/60 border-y border-stone-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-2xl mx-auto mb-16">
+                    <span class="text-xs uppercase tracking-[0.3em] font-bold text-amber-700 block mb-2">Proyecto Formativo (PBL)</span>
+                    <h2 class="font-serif-title text-4xl sm:text-5xl font-bold text-stone-800">Nuestro Proyecto y Solución</h2>
+                    <div class="w-16 h-0.5 bg-amber-500 mx-auto mt-4"></div>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="bg-white p-8 rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-shadow">
+                        <div class="w-12 h-12 rounded-xl bg-red-50 text-red-500 flex items-center justify-center mb-6 text-xl"><i class="fa-solid fa-circle-exclamation"></i></div>
+                        <h3 class="font-serif-title text-2xl font-bold text-stone-800 mb-3">Problema identificado</h3>
+                        <p class="text-xs text-stone-600 leading-relaxed">Poca visibilidad comercial y ventas limitadas por falta de presencia estructurada en internet y canales de difusión digital directa.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-2xl border border-amber-300 shadow-sm hover:shadow-md transition-shadow ring-2 ring-amber-400/20">
+                        <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center mb-6 text-xl"><i class="fa-solid fa-lightbulb"></i></div>
+                        <h3 class="font-serif-title text-2xl font-bold text-stone-800 mb-3">Propuesta de solución</h3>
+                        <p class="text-xs text-stone-600 leading-relaxed">Creación de una vitrina digital interactiva con un catálogo en Canva y registro de visitantes para medir el alcance local de la propuesta.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-shadow">
+                        <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center mb-6 text-xl"><i class="fa-solid fa-bullseye"></i></div>
+                        <h3 class="font-serif-title text-2xl font-bold text-stone-800 mb-3">Objetivo general</h3>
+                        <p class="text-xs text-stone-600 leading-relaxed">Implementar la plataforma para la exhibición organizada de productos y validar la experiencia del usuario mediante la recolección de datos.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Resultados de prueba piloto -->
+        <section id="piloto" class="py-20 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-2xl mx-auto mb-16">
+                    <span class="text-xs uppercase tracking-[0.3em] font-bold text-amber-700 block mb-2">Validación del proyecto</span>
+                    <h2 class="font-serif-title text-4xl sm:text-5xl font-bold text-stone-800">Resultados de la Prueba Piloto</h2>
+                    <p class="text-xs text-stone-500 mt-2">Muestra cuantitativa obtenida durante la jornada de exhibición del stand.</p>
+                    <div class="w-16 h-0.5 bg-amber-500 mx-auto mt-4"></div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="p-6 rounded-2xl bg-stone-50 border border-stone-200 text-center hover:border-amber-300 transition-colors"><div class="w-14 h-14 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center mx-auto mb-4 text-2xl font-serif-title font-bold">15</div><h4 class="font-serif-title text-3xl font-bold text-stone-800 mb-1">15 personas</h4><p class="text-[11px] text-stone-500 uppercase tracking-wider font-medium">Probaron la página web</p></div>
+                    <div class="p-6 rounded-2xl bg-stone-50 border border-stone-200 text-center hover:border-amber-300 transition-colors"><div class="w-14 h-14 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center mx-auto mb-4 text-2xl font-serif-title font-bold">13</div><h4 class="font-serif-title text-3xl font-bold text-stone-800 mb-1">13 personas</h4><p class="text-[11px] text-stone-500 uppercase tracking-wider font-medium">Navegación fácil</p></div>
+                    <div class="p-6 rounded-2xl bg-stone-50 border border-stone-200 text-center hover:border-amber-300 transition-colors"><div class="w-14 h-14 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center mx-auto mb-4 text-2xl font-serif-title font-bold">12</div><h4 class="font-serif-title text-3xl font-bold text-stone-800 mb-1">12 personas</h4><p class="text-[11px] text-stone-500 uppercase tracking-wider font-medium">Interés de compra</p></div>
+                    <div class="p-6 rounded-2xl bg-stone-50 border border-stone-200 text-center hover:border-amber-300 transition-colors"><div class="w-14 h-14 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center mx-auto mb-4 text-xl"><i class="fa-solid fa-heart"></i></div><h4 class="font-serif-title text-2xl font-bold text-stone-800 mb-1">Más llamativos</h4><p class="text-[11px] text-stone-500 uppercase tracking-wider font-medium">Collares y pulseras</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Colección seleccionada: fotografías extraídas de los catálogos originales -->
+        <section id="catalogo" class="py-20 bg-amber-50/40 border-t border-stone-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-12 space-y-4">
+                    <span class="text-xs uppercase tracking-[0.3em] font-bold text-amber-700">Colección seleccionada</span>
+                    <h2 class="font-serif-title text-4xl sm:text-5xl font-bold text-stone-800">Pequeños detalles, grandes historias</h2>
+                    <p class="text-sm text-stone-600 leading-relaxed">Descubre algunos diseños de V.R Bisutería. Para conocer el precio y confirmar disponibilidad, escríbenos directamente por WhatsApp.</p>
+                    <div class="w-16 h-0.5 bg-amber-500 mx-auto"></div>
+                </div>
+                <div class="max-w-2xl mx-auto mb-8 grid sm:grid-cols-[1fr_auto] gap-3"><input id="product-search" type="search" placeholder="Buscar un producto..." class="rounded-full border border-stone-300 bg-white px-5 py-3 text-sm" aria-label="Buscar productos"><select id="product-filter" class="rounded-full border border-stone-300 bg-white px-5 py-3 text-sm"><option value="all">Todas las categorías</option><option value="collar">Collares</option><option value="pulsera">Pulseras</option></select></div>
+                <p id="catalog-empty" class="hidden text-center text-sm text-stone-500 mb-5">No encontramos productos con esa búsqueda.</p>
+                <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6" id="product-grid">
+                    <article data-product="collar" class="product-card bg-white rounded-2xl overflow-hidden border border-stone-200 shadow-sm hover:shadow-xl transition-all duration-300">
+                        <div class="aspect-[4/5] bg-stone-100 overflow-hidden"><img src="assets/productos/collar-acerina.jpg" alt="Collar de cuentas tipo acerina" loading="lazy" class="w-full h-full object-cover"></div>
+                        <div class="p-5 space-y-3">
+                            <p class="text-[9px] uppercase tracking-[0.18em] text-amber-700 font-bold">Bisutería seleccionada</p>
+                            <h4 class="font-serif-title text-2xl font-bold text-stone-800">Collar de cuentas tipo acerina</h4>
+                            <p class="text-xs text-stone-600 leading-relaxed">Collar de cuentas oscuras de apariencia metálica, presentado en varias vueltas.</p>
+                            <p class="text-[10px] text-stone-400">Catálogo 162153 · página PDF 17</p>
+                            <p class="text-sm font-semibold text-stone-800">Precio: consultar por WhatsApp</p>
+                            <a href="https://wa.me/573133313811?text=Hola%2C%20me%20interesa%20el%20producto%3A%20Collar%20de%20cuentas%20tipo%20acerina.%20%C2%BFMe%20pueden%20compartir%20disponibilidad%20y%20precio%3F" target="_blank" rel="noopener noreferrer" class="inline-flex w-full items-center justify-center gap-2 px-5 py-3 rounded-full bg-green-600 hover:bg-green-700 text-white text-[10px] font-bold uppercase tracking-wider transition-colors"><i class="fa-brands fa-whatsapp text-base"></i> Consultar por WhatsApp</a>
+                        </div>
+                    </article>
+                    <article data-product="collar" class="product-card bg-white rounded-2xl overflow-hidden border border-stone-200 shadow-sm hover:shadow-xl transition-all duration-300">
+                        <div class="aspect-[4/5] bg-stone-100 overflow-hidden"><img src="assets/productos/collar-letras.jpg" alt="Collar personalizado con letras acrílicas" loading="lazy" class="w-full h-full object-cover"></div>
+                        <div class="p-5 space-y-3">
+                            <p class="text-[9px] uppercase tracking-[0.18em] text-amber-700 font-bold">Bisutería seleccionada</p>
+                            <h4 class="font-serif-title text-2xl font-bold text-stone-800">Collar personalizado con letras acrílicas</h4>
+                            <p class="text-xs text-stone-600 leading-relaxed">Diseño de cuentas con letras acrílicas de colores para dar un toque personal.</p>
+                            <p class="text-[10px] text-stone-400">Catálogo 162153 · página PDF 20</p>
+                            <p class="text-sm font-semibold text-stone-800">Precio: consultar por WhatsApp</p>
+                            <a href="https://wa.me/573133313811?text=Hola%2C%20me%20interesa%20el%20producto%3A%20Collar%20personalizado%20con%20letras%20acr%C3%ADlicas.%20%C2%BFMe%20pueden%20compartir%20disponibilidad%20y%20precio%3F" target="_blank" rel="noopener noreferrer" class="inline-flex w-full items-center justify-center gap-2 px-5 py-3 rounded-full bg-green-600 hover:bg-green-700 text-white text-[10px] font-bold uppercase tracking-wider transition-colors"><i class="fa-brands fa-whatsapp text-base"></i> Consultar por WhatsApp</a>
+                        </div>
+                    </article>
+                    <article data-product="collar" class="product-card bg-white rounded-2xl overflow-hidden border border-stone-200 shadow-sm hover:shadow-xl transition-all duration-300">
+                        <div class="aspect-[4/5] bg-stone-100 overflow-hidden"><img src="assets/productos/collar-pastilla.jpg" alt="Collar tipo pastilla" loading="lazy" class="w-full h-full object-cover"></div>
+                        <div class="p-5 space-y-3">
+                            <p class="text-[9px] uppercase tracking-[0.18em] text-amber-700 font-bold">Bisutería seleccionada</p>
+                            <h4 class="font-serif-title text-2xl font-bold text-stone-800">Collar tipo pastilla</h4>
+                            <p class="text-xs text-stone-600 leading-relaxed">Collar de cuentas tipo pastilla con detalles florales en tonos claros.</p>
+                            <p class="text-[10px] text-stone-400">Catálogo 162153 · página PDF 30</p>
+                            <p class="text-sm font-semibold text-stone-800">Precio: consultar por WhatsApp</p>
+                            <a href="https://wa.me/573133313811?text=Hola%2C%20me%20interesa%20el%20producto%3A%20Collar%20tipo%20pastilla.%20%C2%BFMe%20pueden%20compartir%20disponibilidad%20y%20precio%3F" target="_blank" rel="noopener noreferrer" class="inline-flex w-full items-center justify-center gap-2 px-5 py-3 rounded-full bg-green-600 hover:bg-green-700 text-white text-[10px] font-bold uppercase tracking-wider transition-colors"><i class="fa-brands fa-whatsapp text-base"></i> Consultar por WhatsApp</a>
+                        </div>
+                    </article>
+                    <article data-product="collar" class="product-card bg-white rounded-2xl overflow-hidden border border-stone-200 shadow-sm hover:shadow-xl transition-all duration-300">
+                        <div class="aspect-[4/5] bg-stone-100 overflow-hidden"><img src="assets/productos/collar-perlado-rosa.jpg" alt="Collar rosado de acabado perlado" loading="lazy" class="w-full h-full object-cover"></div>
+                        <div class="p-5 space-y-3">
+                            <p class="text-[9px] uppercase tracking-[0.18em] text-amber-700 font-bold">Bisutería seleccionada</p>
+                            <h4 class="font-serif-title text-2xl font-bold text-stone-800">Collar rosado de acabado perlado</h4>
+                            <p class="text-xs text-stone-600 leading-relaxed">Collar de varias vueltas con cuentas rosadas de acabado perlado.</p>
+                            <p class="text-[10px] text-stone-400">Catálogo 162153 · página PDF 75</p>
+                            <p class="text-sm font-semibold text-stone-800">Precio: consultar por WhatsApp</p>
+                            <a href="https://wa.me/573133313811?text=Hola%2C%20me%20interesa%20el%20producto%3A%20Collar%20rosado%20de%20acabado%20perlado.%20%C2%BFMe%20pueden%20compartir%20disponibilidad%20y%20precio%3F" target="_blank" rel="noopener noreferrer" class="inline-flex w-full items-center justify-center gap-2 px-5 py-3 rounded-full bg-green-600 hover:bg-green-700 text-white text-[10px] font-bold uppercase tracking-wider transition-colors"><i class="fa-brands fa-whatsapp text-base"></i> Consultar por WhatsApp</a>
+                        </div>
+                    </article>
+                    <article data-product="collar" class="product-card bg-white rounded-2xl overflow-hidden border border-stone-200 shadow-sm hover:shadow-xl transition-all duration-300">
+                        <div class="aspect-[4/5] bg-stone-100 overflow-hidden"><img src="assets/productos/collar-ojo-turco.jpg" alt="Collar de ojo turco" loading="lazy" class="w-full h-full object-cover"></div>
+                        <div class="p-5 space-y-3">
+                            <p class="text-[9px] uppercase tracking-[0.18em] text-amber-700 font-bold">Bisutería seleccionada</p>
+                            <h4 class="font-serif-title text-2xl font-bold text-stone-800">Collar de ojo turco</h4>
+                            <p class="text-xs text-stone-600 leading-relaxed">Collar de cuentas azules y blancas con motivos de ojo turco.</p>
+                            <p class="text-[10px] text-stone-400">Catálogo 162153 · página PDF 85</p>
+                            <p class="text-sm font-semibold text-stone-800">Precio: consultar por WhatsApp</p>
+                            <a href="https://wa.me/573133313811?text=Hola%2C%20me%20interesa%20el%20producto%3A%20Collar%20de%20ojo%20turco.%20%C2%BFMe%20pueden%20compartir%20disponibilidad%20y%20precio%3F" target="_blank" rel="noopener noreferrer" class="inline-flex w-full items-center justify-center gap-2 px-5 py-3 rounded-full bg-green-600 hover:bg-green-700 text-white text-[10px] font-bold uppercase tracking-wider transition-colors"><i class="fa-brands fa-whatsapp text-base"></i> Consultar por WhatsApp</a>
+                        </div>
+                    </article>
+                    <article data-product="collar" class="product-card bg-white rounded-2xl overflow-hidden border border-stone-200 shadow-sm hover:shadow-xl transition-all duration-300">
+                        <div class="aspect-[4/5] bg-stone-100 overflow-hidden"><img src="assets/productos/collar-bolas-acrilicas.jpg" alt="Collar de bolas acrílicas multicolor" loading="lazy" class="w-full h-full object-cover"></div>
+                        <div class="p-5 space-y-3">
+                            <p class="text-[9px] uppercase tracking-[0.18em] text-amber-700 font-bold">Bisutería seleccionada</p>
+                            <h4 class="font-serif-title text-2xl font-bold text-stone-800">Collar de bolas acrílicas multicolor</h4>
+                            <p class="text-xs text-stone-600 leading-relaxed">Collar de varias vueltas con cuentas acrílicas de distintos colores.</p>
+                            <p class="text-[10px] text-stone-400">Catálogo 162153 · página PDF 90</p>
+                            <p class="text-sm font-semibold text-stone-800">Precio: consultar por WhatsApp</p>
+                            <a href="https://wa.me/573133313811?text=Hola%2C%20me%20interesa%20el%20producto%3A%20Collar%20de%20bolas%20acr%C3%ADlicas%20multicolor.%20%C2%BFMe%20pueden%20compartir%20disponibilidad%20y%20precio%3F" target="_blank" rel="noopener noreferrer" class="inline-flex w-full items-center justify-center gap-2 px-5 py-3 rounded-full bg-green-600 hover:bg-green-700 text-white text-[10px] font-bold uppercase tracking-wider transition-colors"><i class="fa-brands fa-whatsapp text-base"></i> Consultar por WhatsApp</a>
+                        </div>
+                    </article>
+                    <article data-product="pulsera" class="product-card bg-white rounded-2xl overflow-hidden border border-stone-200 shadow-sm hover:shadow-xl transition-all duration-300">
+                        <div class="aspect-[4/5] bg-stone-100 overflow-hidden"><img src="assets/productos/pulseras-numeros.jpg" alt="Pulseras con números acrílicos" loading="lazy" class="w-full h-full object-cover"></div>
+                        <div class="p-5 space-y-3">
+                            <p class="text-[9px] uppercase tracking-[0.18em] text-amber-700 font-bold">Bisutería seleccionada</p>
+                            <h4 class="font-serif-title text-2xl font-bold text-stone-800">Pulseras con números acrílicos</h4>
+                            <p class="text-xs text-stone-600 leading-relaxed">Conjunto de pulseras con cuentas y números acrílicos en diferentes combinaciones.</p>
+                            <p class="text-[10px] text-stone-400">Catálogo 162153 · página PDF 26</p>
+                            <p class="text-sm font-semibold text-stone-800">Precio: consultar por WhatsApp</p>
+                            <a href="https://wa.me/573133313811?text=Hola%2C%20me%20interesa%20el%20producto%3A%20Pulseras%20con%20n%C3%BAmeros%20acr%C3%ADlicos.%20%C2%BFMe%20pueden%20compartir%20disponibilidad%20y%20precio%3F" target="_blank" rel="noopener noreferrer" class="inline-flex w-full items-center justify-center gap-2 px-5 py-3 rounded-full bg-green-600 hover:bg-green-700 text-white text-[10px] font-bold uppercase tracking-wider transition-colors"><i class="fa-brands fa-whatsapp text-base"></i> Consultar por WhatsApp</a>
+                        </div>
+                    </article>
+                    <article data-product="pulsera" class="product-card bg-white rounded-2xl overflow-hidden border border-stone-200 shadow-sm hover:shadow-xl transition-all duration-300">
+                        <div class="aspect-[4/5] bg-stone-100 overflow-hidden"><img src="assets/productos/pulseras-cordon.jpg" alt="Pulseras trenzadas de cordón con detalles dorados" loading="lazy" class="w-full h-full object-cover"></div>
+                        <div class="p-5 space-y-3">
+                            <p class="text-[9px] uppercase tracking-[0.18em] text-amber-700 font-bold">Bisutería seleccionada</p>
+                            <h4 class="font-serif-title text-2xl font-bold text-stone-800">Pulseras trenzadas de cordón con detalles dorados</h4>
+                            <p class="text-xs text-stone-600 leading-relaxed">Pulseras de cordón trenzado en distintos tonos con cuentas decorativas doradas.</p>
+                            <p class="text-[10px] text-stone-400">Catálogo 162459 · página PDF 77</p>
+                            <p class="text-sm font-semibold text-stone-800">Precio: consultar por WhatsApp</p>
+                            <a href="https://wa.me/573133313811?text=Hola%2C%20me%20interesa%20el%20producto%3A%20Pulseras%20trenzadas%20de%20cord%C3%B3n%20con%20detalles%20dorados.%20%C2%BFMe%20pueden%20compartir%20disponibilidad%20y%20precio%3F" target="_blank" rel="noopener noreferrer" class="inline-flex w-full items-center justify-center gap-2 px-5 py-3 rounded-full bg-green-600 hover:bg-green-700 text-white text-[10px] font-bold uppercase tracking-wider transition-colors"><i class="fa-brands fa-whatsapp text-base"></i> Consultar por WhatsApp</a>
+                        </div>
+                    </article>
+                </div>
+                <div class="mt-12 text-center space-y-4">
+                    <p class="text-xs text-stone-500">¿Buscas más diseños? Explora nuestro catálogo digital completo.</p>
+                    <div class="flex flex-col sm:flex-row justify-center gap-3">
+                        <a data-catalog href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full bg-amber-600 hover:bg-amber-700 text-white font-semibold text-xs tracking-widest uppercase shadow-lg transition-all"><span>Abrir catálogo completo</span><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                        <a data-whatsapp href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full bg-green-600 hover:bg-green-700 text-white font-semibold text-xs tracking-widest uppercase shadow-lg transition-all"><i class="fa-brands fa-whatsapp text-xl"></i><span>Hablar con nosotros</span></a>
+                    </div>
+                    <p class="text-xs text-stone-500">WhatsApp: <strong>+57 313 331 3811</strong> · Precios y disponibilidad sujetos a confirmación.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Encuesta -->
+        <section id="encuesta" class="py-20 bg-stone-900 text-white relative overflow-hidden">
+            <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="text-center mb-12 space-y-3">
+                    <span class="text-xs uppercase tracking-[0.3em] font-bold text-amber-400 block">Tu opinión es muy importante</span>
+                    <h2 class="font-serif-title text-4xl sm:text-5xl font-bold text-white">Encuesta de Satisfacción</h2>
+                    <p class="text-xs text-stone-300 max-w-md mx-auto">Responde las siguientes tres preguntas para ayudarnos a evaluar nuestra propuesta web.</p>
+                    <div class="w-16 h-0.5 bg-amber-500 mx-auto mt-4"></div>
+                </div>
+                <div class="bg-stone-800/90 rounded-3xl border border-stone-700 p-6 sm:p-10 shadow-2xl space-y-8 backdrop-blur-md">
+                    <div class="p-4 rounded-xl bg-stone-900/80 border border-stone-700 space-y-3 text-xs">
+                      <p class="text-stone-200 font-semibold">Identificación opcional</p><p class="text-stone-400">Puedes responder de forma anónima o identificarte voluntariamente.</p>
+                      <label class="block text-stone-300">Nombre (opcional)<input id="survey-name" maxlength="100" class="mt-1 w-full rounded-lg bg-stone-950 border border-stone-600 p-3 text-white" placeholder="Tu nombre"></label>
+                      <label class="block text-stone-300">Correo (opcional)<input id="survey-email" type="email" maxlength="254" class="mt-1 w-full rounded-lg bg-stone-950 border border-stone-600 p-3 text-white" placeholder="correo@ejemplo.com"></label>
+                      <label class="flex gap-2 text-stone-300"><input id="survey-consent" type="checkbox" class="accent-amber-500 mt-1"><span>Autorizo el tratamiento de estos datos de identificación para la finalidad descrita en el <a href="#privacidad" class="underline">aviso de privacidad</a>. Si respondo anónimamente, no se requieren estos datos.</span></label>
+                    </div>
+                    <form id="survey-form" class="space-y-8">
+                        <div class="space-y-3 pb-6 border-b border-stone-700/60">
+                            <p class="block text-sm font-semibold text-amber-100">1. ¿Interactuaste con nuestra página web?</p>
+                            <div class="grid grid-cols-2 gap-4 survey-option">
+                                <div><input type="radio" id="p1-si" name="q1" value="Sí" required class="hidden"><label for="p1-si" class="block w-full text-center py-3 px-4 rounded-xl border border-stone-600 bg-stone-900/60 text-stone-300 text-xs font-bold cursor-pointer transition-all hover:border-amber-500"><i class="fa-solid fa-thumbs-up mr-1.5"></i>Sí</label></div>
+                                <div><input type="radio" id="p1-no" name="q1" value="No" required class="hidden"><label for="p1-no" class="block w-full text-center py-3 px-4 rounded-xl border border-stone-600 bg-stone-900/60 text-stone-300 text-xs font-bold cursor-pointer transition-all hover:border-amber-500"><i class="fa-solid fa-thumbs-down mr-1.5"></i>No</label></div>
+                            </div>
+                        </div>
+                        <div class="space-y-3 pb-6 border-b border-stone-700/60">
+                            <p class="block text-sm font-semibold text-amber-100">2. ¿Te pareció fácil la navegación?</p>
+                            <div class="grid grid-cols-2 gap-4 survey-option">
+                                <div><input type="radio" id="p2-si" name="q2" value="Sí" required class="hidden"><label for="p2-si" class="block w-full text-center py-3 px-4 rounded-xl border border-stone-600 bg-stone-900/60 text-stone-300 text-xs font-bold cursor-pointer transition-all hover:border-amber-500"><i class="fa-solid fa-thumbs-up mr-1.5"></i>Sí</label></div>
+                                <div><input type="radio" id="p2-no" name="q2" value="No" required class="hidden"><label for="p2-no" class="block w-full text-center py-3 px-4 rounded-xl border border-stone-600 bg-stone-900/60 text-stone-300 text-xs font-bold cursor-pointer transition-all hover:border-amber-500"><i class="fa-solid fa-thumbs-down mr-1.5"></i>No</label></div>
+                            </div>
+                        </div>
+                        <div class="space-y-3">
+                            <p class="block text-sm font-semibold text-amber-100">3. ¿Tienes interés real de compra?</p>
+                            <div class="grid grid-cols-2 gap-4 survey-option">
+                                <div><input type="radio" id="p3-si" name="q3" value="Sí" required class="hidden"><label for="p3-si" class="block w-full text-center py-3 px-4 rounded-xl border border-stone-600 bg-stone-900/60 text-stone-300 text-xs font-bold cursor-pointer transition-all hover:border-amber-500"><i class="fa-solid fa-thumbs-up mr-1.5"></i>Sí</label></div>
+                                <div><input type="radio" id="p3-no" name="q3" value="No" required class="hidden"><label for="p3-no" class="block w-full text-center py-3 px-4 rounded-xl border border-stone-600 bg-stone-900/60 text-stone-300 text-xs font-bold cursor-pointer transition-all hover:border-amber-500"><i class="fa-solid fa-thumbs-down mr-1.5"></i>No</label></div>
+                            </div>
+                        </div>
+                        <button type="submit" class="w-full py-4 rounded-xl bg-amber-500 hover:bg-amber-600 text-stone-900 font-bold text-xs tracking-widest uppercase transition-all shadow-lg shadow-amber-500/20">Enviar respuestas</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Pie de página -->
+    <footer class="bg-black text-white/70 py-10 border-t border-stone-800 text-center space-y-4">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
+            <span class="font-serif-title text-2xl font-bold tracking-widest text-white block">V.R Bisutería</span>
+            <p class="font-serif-title italic text-xs text-amber-200">"Pequeños detalles, grandes historias"</p>
+            <a data-whatsapp href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-green-600 hover:bg-green-700 text-white text-xs font-semibold tracking-wider uppercase transition-all"><i class="fa-brands fa-whatsapp text-lg"></i>Escríbenos por WhatsApp</a>
+            <div id="privacidad" class="max-w-3xl mx-auto text-left bg-stone-900/70 border border-stone-700 rounded-xl p-4 text-[10px] leading-relaxed text-stone-400"><strong class="text-amber-200">Aviso de privacidad y tratamiento de datos</strong><p class="mt-2">Responsable: Camilo Forero, para V.R. Bisutería. Finalidad: gestionar registros voluntarios, analizar la experiencia de los visitantes y mejorar el emprendimiento. Los datos se conservarán hasta que se solicite su eliminación o dejen de ser necesarios para la finalidad informada. El suministro de datos es voluntario; la navegación y la encuesta anónima no requieren registro. Para ejercer consultas, solicitar información o pedir la eliminación de datos, escribe al WhatsApp +57 313 331 3811. Este aviso es una versión inicial y debe completarse/revisarse antes de producción con los datos de contacto y procedimientos formales del responsable.</p></div>
+            <p class="text-xs text-stone-400">WhatsApp: +57 313 331 3811</p>
+            <p class="text-[10px] text-stone-500">© 2026 V.R Bisutería - Proyecto Formativo PBL. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="/config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+    (() => {
+      const cfg = window.VR_CONFIG || {};
+      const supabase = (cfg.supabaseUrl && cfg.supabaseAnonKey && !cfg.supabaseUrl.includes('TU_'))
+        ? window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey) : null;
+      let currentUser = null;
+      const $ = id => document.getElementById(id);
+      const callFunction = async (name, body) => { const r=await fetch('/.netlify/functions/'+name,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}); const data=await r.json().catch(()=>({})); if(!r.ok) throw new Error(data.error||'Error de servidor'); return data; };
+      const toast = (message, error=false) => { const el=$('toast'); if(!el)return; $('toast-message').textContent=message; $('toast-icon').className=error?'fa-solid fa-circle-exclamation text-red-400 text-xl':'fa-solid fa-circle-check text-amber-500 text-xl'; el.classList.remove('translate-y-20','opacity-0'); setTimeout(()=>el.classList.add('translate-y-20','opacity-0'),3500); };
+      const whatsapp='https://wa.me/573133313811?text='+encodeURIComponent('Hola, me interesa conocer más sobre V.R. Bisutería.');
+      document.querySelectorAll('[data-catalog]').forEach(a=>a.href='https://canva.link/tlqd16e246yz88k');
+      document.querySelectorAll('[data-whatsapp]').forEach(a=>a.href=whatsapp);
+      const modal=$('welcome-modal');
+      $('close-welcome').addEventListener('click',()=>modal.classList.add('hidden'));
+      document.querySelectorAll('a[href="#privacidad"]').forEach(a=>a.addEventListener('click',()=>modal.classList.add('hidden')));
+      $('gate-form').addEventListener('submit', async e=>{
+        e.preventDefault(); const name=$('user-fullname').value.trim(), email=$('user-email').value.trim().toLowerCase();
+        if(!name&&!email){toast('Escribe al menos tu nombre o correo si deseas registrarte.',true);return;}
+        if(email&&!$('user-email').checkValidity()){toast('Revisa el formato del correo.',true);return;}
+        if(!supabase){toast('Registro pendiente: configura Supabase para guardar los datos de forma segura.',true);return;}
+        const consent=$('data-consent').checked; if(!consent){toast('Necesitamos tu autorización expresa para registrar tus datos.',true);return;}
+        try{await callFunction('register-visitor',{full_name:name||null,email:email||null,consent:true});}catch(error){toast('No se pudo guardar el registro. Inténtalo más tarde.',true);return;}
+        currentUser={name,email}; modal.classList.add('hidden'); toast('¡Gracias! Tu registro voluntario fue recibido.');
+        notify('Nuevo registro voluntario V.R. Bisutería',{nombre:name||'No informado',correo:email||'No informado'});
+      });
+      async function notify(event, fields){ if(!supabase)return; try{await callFunction('notify-admin',{event,fields});}catch(_){/* La notificación no invalida el registro. */} }
+      $('survey-form').addEventListener('submit',async e=>{
+        e.preventDefault(); const fd=new FormData(e.currentTarget); const name=$('survey-name').value.trim(), email=$('survey-email').value.trim().toLowerCase();
+        if(email&&!$('survey-email').checkValidity()){toast('Revisa el formato del correo.',true);return;}
+        if((name||email)&&!$('survey-consent').checked){toast('Autoriza el tratamiento de tus datos o borra los campos para responder anónimamente.',true);return;}
+        const answers={q1_interaction:fd.get('q1'),q2_navigation:fd.get('q2'),q3_purchase_interest:fd.get('q3')};
+        if(Object.values(answers).some(v=>!v)){toast('Responde las tres preguntas.',true);return;}
+        if(!supabase){toast('Encuesta preparada; falta conectar Supabase para recibir respuestas.',true);return;}
+        try{await callFunction('submit-survey',{...answers,respondent_name:name||null,respondent_email:email||null,identified:!!(name||email),consent:!!$('survey-consent').checked});}catch(error){toast('No se pudo enviar la encuesta. Inténtalo de nuevo.',true);return;}
+        await notify('Nueva respuesta de encuesta V.R. Bisutería',{identificacion:name||email?'Identificada voluntariamente':'Anónima',...answers});
+        e.currentTarget.reset(); toast('¡Gracias por compartir tu opinión!');
+      });
+      // Búsqueda y filtro local del catálogo; no requiere servicios externos.
+      const search=$('product-search'), filter=$('product-filter');
+      function filterProducts(){const q=(search.value||'').toLocaleLowerCase('es');let visible=0;document.querySelectorAll('.product-card').forEach(card=>{const ok=(filter.value==='all'||card.dataset.product===filter.value)&&card.textContent.toLocaleLowerCase('es').includes(q);card.classList.toggle('hidden',!ok);if(ok)visible++;});$('catalog-empty').classList.toggle('hidden',visible>0);}
+      search.addEventListener('input',filterProducts); filter.addEventListener('change',filterProducts);
+      // Sesión aleatoria de analítica: no contiene nombre, correo ni otros identificadores directos.
+      try{let sid=sessionStorage.getItem('vr_session_id');if(!sid){sid=crypto.randomUUID();sessionStorage.setItem('vr_session_id',sid);} if(supabase) fetch('/.netlify/functions/track-visit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session_id:sid,path:location.pathname})}).catch(()=>{});}catch(_){/* No bloquear la navegación si el navegador restringe almacenamiento. */}
+      // Panel administrativo: se muestra como acceso, no como una consola pública.
+      window.toggleDevPanel=async()=>{if(!supabase){toast('La administración estará disponible al configurar Supabase.',true);return;} const {data:{session}}=await supabase.auth.getSession(); if(!session){const email=prompt('Correo de administrador autorizado:');if(!email)return;const password=prompt('Contraseña de tu cuenta de administración:');if(!password)return;const {error}=await supabase.auth.signInWithPassword({email,password});if(error){toast('No se pudo iniciar sesión.',true);return;}} window.location.href='/admin/';};
+    })();
+    </script>
+</body>
+</html>
