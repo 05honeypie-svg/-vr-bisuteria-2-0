@@ -1,7 +1,7 @@
 
-export const handler = async event => {
-  const { client, reply } = await import('./_shared.mjs');
+import { client, reply } from './_shared.mjs';
 
+export const handler = async event => {
   if (event.httpMethod !== 'GET') {
     return reply(405, { error: 'Método no permitido' });
   }
