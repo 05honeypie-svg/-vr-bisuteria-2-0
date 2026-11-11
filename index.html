@@ -310,6 +310,25 @@
         ? window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey) : null;
       let currentUser = null;
       const $ = id => document.getElementById(id);
+        
+      // Actualizar el contador público de registros voluntarios.
+      async function updateHeroCounter() {
+        const counter = $('hero-counter');
+        if (!counter) return;
+
+        try {
+          const response = await fetch('/.netlify/functions/public-stats');
+          if (!response.ok) throw new Error('No se pudo consultar el contador');
+
+          const data = await response.json();
+          counter.textContent = data.registrations ?? 0;
+        } catch (error) {
+          console.error('Error al actualizar el contador:', error);
+        }
+      }
+
+      updateHeroCounter();
+
       const callFunction = async (name, body) => { const r=await fetch('/.netlify/functions/'+name,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}); const data=await r.json().catch(()=>({})); if(!r.ok) throw new Error(data.error||'Error de servidor'); return data; };
       const toast = (message, error=false) => { const el=$('toast'); if(!el)return; $('toast-message').textContent=message; $('toast-icon').className=error?'fa-solid fa-circle-exclamation text-red-400 text-xl':'fa-solid fa-circle-check text-amber-500 text-xl'; el.classList.remove('translate-y-20','opacity-0'); setTimeout(()=>el.classList.add('translate-y-20','opacity-0'),3500); };
       const whatsapp='https://wa.me/573133313811?text='+encodeURIComponent('Hola, me interesa conocer más sobre V.R. Bisutería.');
