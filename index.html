@@ -69,6 +69,11 @@
                     <div class="pt-4 flex flex-col sm:flex-row flex-wrap gap-4 justify-center md:justify-start">
                         <a data-catalog href="#" target="_blank" rel="noopener noreferrer" class="px-8 py-4 rounded-full bg-amber-600 hover:bg-amber-700 text-white font-semibold text-xs tracking-widest uppercase shadow-lg shadow-amber-600/20 transition-all transform hover:-translate-y-0.5 text-center flex items-center justify-center gap-2"><span>Ver catálogo en Canva</span><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
                         <a href="#encuesta" class="px-8 py-4 rounded-full bg-white/90 hover:bg-white text-stone-800 border border-stone-300 font-semibold text-xs tracking-widest uppercase transition-all text-center hover:shadow-md">Responder encuesta</a>
+                        
+<button id="open-registration" type="button" class="px-8 py-4 rounded-full bg-stone-800 hover:bg-stone-900 text-white font-semibold text-xs tracking-widest uppercase shadow-lg transition-all transform hover:-translate-y-0.5">
+  Registrarme voluntariamente
+</button>
+
                         <a data-whatsapp href="#" target="_blank" rel="noopener noreferrer" class="px-8 py-4 rounded-full bg-green-600 hover:bg-green-700 text-white font-semibold text-xs tracking-widest uppercase shadow-lg transition-all transform hover:-translate-y-0.5 text-center flex items-center justify-center gap-2"><i class="fa-brands fa-whatsapp text-lg"></i><span>Contáctanos</span></a>
                     </div>
                 </div>
@@ -335,7 +340,14 @@
       document.querySelectorAll('[data-catalog]').forEach(a=>a.href='https://canva.link/tlqd16e246yz88k');
       document.querySelectorAll('[data-whatsapp]').forEach(a=>a.href=whatsapp);
       const modal=$('welcome-modal');
-      $('close-welcome').addEventListener('click',()=>modal.classList.add('hidden'));
+        $('open-registration').addEventListener('click', () => {
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+});
+$('close-welcome').addEventListener('click', () => {
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+});
       document.querySelectorAll('a[href="#privacidad"]').forEach(a=>a.addEventListener('click',()=>modal.classList.add('hidden')));
       $('gate-form').addEventListener('submit', async e=>{
         e.preventDefault(); const name=$('user-fullname').value.trim(), email=$('user-email').value.trim().toLowerCase();
